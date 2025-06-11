@@ -3,183 +3,206 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>インタラクティブ AI活用提案コンテスト案内</title>
+    <title>インタラクティブ商標登録ガイド</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Chosen Palette: Calm Harmony -->
-    <!-- Application Structure Plan: The SPA is structured as a narrative journey. It begins with the President's compelling vision ("The Why"), transitions into an interactive "Idea Explorer" where users can actively discover concrete AI use-cases relevant to their roles ("The How"), and concludes with a strong call to action for the contest ("The What"). This structure is designed to first build motivation and understanding, then provide practical inspiration, making employees more likely to engage with the contest. It directly addresses the source report's goal of overcoming employee hesitation. -->
-    <!-- Visualization & Content Choices: Report Info: The core is a motivational announcement and examples of AI use. Goal: Inform, Engage, Inspire. Viz/Presentation Method: The central interactive element is a set of clickable cards for different business areas (e.g., 'Data Analysis', 'Document Support'), built with HTML/Tailwind. Interaction: Clicking a card reveals specific, relatable AI application examples via vanilla JS, dynamically updating a content area. Justification: This interactive exploration is far more engaging than a static list. It allows employees to see AI's potential in their own context, sparking personalized ideas. It's a low-pressure way to learn, perfectly suited for an audience with varying AI literacy. -->
+    <!-- Chosen Palette: Warm Neutrals -->
+    <!-- Application Structure Plan: A vertical, interactive timeline. Each step of the trademark process is a clickable card. Clicking a card expands it to reveal details (purpose, action, outcome). This linear, step-by-step structure directly mirrors the source report's process, making it highly intuitive for users. The click-to-reveal interaction prevents information overload and encourages focused exploration of each stage. -->
+    <!-- Visualization & Content Choices: The core of the report is a 6-step text-based process. Goal: Organize & Inform. Method: A structured HTML/CSS timeline. Each step is a card with a title and an icon (Unicode). Interaction: Clicking a step highlights it and toggles the visibility of its detailed content using vanilla JavaScript. Justification: This approach is ideal for procedural information, making a complex legal process digestible and easy to navigate without the need for charts, as there is no quantitative data. -->
     <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap');
         body {
-            font-family: 'Noto Sans JP', sans-serif;
-            background-color: #f8f9fa;
+            font-family: 'Hiragino Kaku Gothic ProN', 'メイリオ', Meiryo, sans-serif;
         }
-        .card-active {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-            border-color: #4f46e5;
+        .step-card.active {
+            border-color: #3b82f6;
+            background-color: #eff6ff;
         }
-        .idea-content {
-            transition: opacity 0.5s ease-in-out;
+        .step-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-in-out, padding 0.5s ease-in-out;
+            padding-top: 0;
+            padding-bottom: 0;
         }
-        .fade-in {
-            opacity: 1 !important;
+        .step-card.active .step-content {
+            max-height: 500px;
+            padding-top: 1rem;
+            padding-bottom: 1rem;
         }
-        .fade-out {
-            opacity: 0;
+        .timeline-line {
+            position: absolute;
+            left: 1.5rem;
+            top: 1.5rem;
+            bottom: 1.5rem;
+            width: 4px;
+            background-color: #d1d5db;
+            z-index: 0;
+        }
+        .timeline-dot {
+            position: absolute;
+            left: 1.5rem;
+            top: 1.5rem;
+            transform: translateX(-50%);
+            width: 1.5rem;
+            height: 1.5rem;
+            z-index: 1;
         }
     </style>
 </head>
-<body class="text-gray-800">
+<body class="bg-slate-50 text-slate-800">
 
-    <div class="container mx-auto p-4 md:p-8 max-w-5xl">
+    <div class="container mx-auto max-w-4xl p-4 sm:p-6 lg:p-8">
 
-        <!-- Header -->
-        <header class="text-center mb-12">
-            <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-2">未来を創る、AI活用提案コンテスト</h1>
-            <p class="text-gray-600">AIは、あなたの仕事をどう変えるだろう？</p>
+        <header class="text-center mb-10">
+            <h1 class="text-3xl md:text-4xl font-bold text-slate-900 mb-2">インタラクティブ商標登録ガイド</h1>
+            <p class="text-slate-600">あなたのビジネスを守るための大切なステップ。各項目をクリックして詳細を確認しましょう。</p>
         </header>
 
-        <!-- President's Message -->
-        <section class="mb-16">
-            <div class="bg-white p-8 rounded-xl shadow-md border border-gray-200">
-                <h2 class="text-2xl font-bold text-center text-indigo-700 mb-6">社長からのメッセージ</h2>
-                <div class="space-y-4 text-gray-700 leading-relaxed">
-                    <p>社員の皆さん、この度「AI活用提案コンテスト」を開催します。近年のAI技術の進化は、私たちの働き方を根本から変える力を持っています。しかし、AIを「難しそう」「よく分からない」と感じている人が多いのも事実です。私はこの状況に強い危機感を抱いています。</p>
-                    <p class="font-bold text-indigo-800 bg-indigo-50 p-4 rounded-lg">AIの進化を考えると、今後、AIを使いこなせない会社は競争力を失います。会社として成長し続けるためには、私たち一人ひとりが「AIに使われる側」ではなく、AIを自らの武器として「使いこなす側」になる必要があります。</p>
-                    <p>このコンテストは、皆さんが「AIで何ができるか」を考え、日々の業務で感じる「もっとこうだったら」という思いを形にする絶好の機会です。知識や経験は問いません。皆さんの純粋なアイデアが、当社の未来を創る原動力となります。</p>
-                </div>
-                <p class="text-right mt-6 font-bold text-gray-900">[代表取締役社長の氏名]</p>
-            </div>
-        </section>
+        <div id="timeline" class="relative">
+            <div class="timeline-line"></div>
 
-        <!-- Interactive Idea Explorer -->
-        <section class="mb-12">
-            <div class="text-center mb-8">
-                <h2 class="text-2xl font-bold text-gray-900">AI活用のヒントを探そう</h2>
-                <p class="text-gray-600 mt-2">あなたの業務に近いカテゴリーをクリックして、AIで何ができるか見てみましょう。</p>
-            </div>
-
-            <!-- Category Cards -->
-            <div id="idea-categories" class="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8">
-                
-            </div>
-
-            <!-- Idea Display Area -->
-            <div class="bg-white p-6 md:p-8 rounded-xl shadow-inner border border-gray-200 min-h-[200px] flex items-center justify-center">
-                <div id="idea-content" class="idea-content w-full">
-                     <p class="text-center text-gray-500">上のカテゴリーを選択してください。</p>
+            <!-- Step 1 -->
+            <div class="step-card-container relative pl-12 pb-8">
+                <div class="timeline-dot bg-white border-4 border-slate-300 rounded-full"></div>
+                <div id="step-1" class="step-card border-2 border-transparent rounded-lg p-6 bg-white shadow-md cursor-pointer transition-all duration-300 hover:shadow-lg">
+                    <div class="flex items-center justify-between">
+                        <h2 class="text-xl font-bold text-slate-900">1. 商標の決定と調査</h2>
+                        <span class="text-3xl">🔍</span>
+                    </div>
+                    <div class="step-content">
+                        <p class="mt-4 text-slate-600">まず、どんな名前やロゴを商標として登録したいかを決めます。そして、その商標がすでに登録されていないか、または似たような商標がないかを特許庁のデータベース（J-PlatPatなど）で徹底的に調べます。ここで問題が見つかれば、別の商標を検討する必要があります。</p>
+                        <div class="mt-4 bg-slate-100 rounded-lg p-4">
+                            <p><strong class="font-semibold text-slate-700">目的:</strong> 登録したい商標を決める</p>
+                            <p><strong class="font-semibold text-slate-700">行動:</strong> 特許庁データベース（J-PlatPat）での先行商標調査</p>
+                            <p><strong class="font-semibold text-slate-700">結果:</strong> 類似商標が見つかれば、別の商標を再検討</p>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </section>
 
-        <!-- Call to Action -->
-        <section class="text-center bg-indigo-700 text-white p-8 rounded-xl shadow-lg">
-            <h2 class="text-3xl font-bold mb-4">さあ、あなたのアイデアを形にしよう！</h2>
-            <p class="mb-6 max-w-2xl mx-auto">どんな小さなアイデアでも構いません。あなたの「こうなったら良いな」が会社の未来を変えるかもしれません。詳細は応募ガイドをご確認ください。</p>
-            <a href="#" class="inline-block bg-white text-indigo-700 font-bold py-3 px-8 rounded-full text-lg hover:bg-indigo-50 transition-colors duration-300 shadow-md">
-                応募ガイドを見る（※リンク先）
-            </a>
-        </section>
+            <!-- Step 2 -->
+            <div class="step-card-container relative pl-12 pb-8">
+                <div class="timeline-dot bg-white border-4 border-slate-300 rounded-full"></div>
+                <div id="step-2" class="step-card border-2 border-transparent rounded-lg p-6 bg-white shadow-md cursor-pointer transition-all duration-300 hover:shadow-lg">
+                    <div class="flex items-center justify-between">
+                        <h2 class="text-xl font-bold text-slate-900">2. 出願書類の作成と提出</h2>
+                        <span class="text-3xl">📝</span>
+                    </div>
+                     <div class="step-content">
+                        <p class="mt-4 text-slate-600">調査で問題がなければ、特許庁に提出する出願書類を作成します。ここには、登録したい商標の画像や名称、そしてその商標をどんな商品やサービスに使うのか（指定商品・役務）を具体的に記載します。書類が完成したら、特許庁に提出し、出願料を支払います。</p>
+                        <div class="mt-4 bg-slate-100 rounded-lg p-4">
+                            <p><strong class="font-semibold text-slate-700">目的:</strong> 登録申請を行う</p>
+                            <p><strong class="font-semibold text-slate-700">行動:</strong> 出願書類の作成、提出、出願料の支払い</p>
+                            <p><strong class="font-semibold text-slate-700">結果:</strong> 特許庁への正式な出願手続き完了</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
+            <!-- Step 3 -->
+            <div class="step-card-container relative pl-12 pb-8">
+                <div class="timeline-dot bg-white border-4 border-slate-300 rounded-full"></div>
+                <div id="step-3" class="step-card border-2 border-transparent rounded-lg p-6 bg-white shadow-md cursor-pointer transition-all duration-300 hover:shadow-lg">
+                    <div class="flex items-center justify-between">
+                        <h2 class="text-xl font-bold text-slate-900">3. 方式審査と実体審査</h2>
+                        <span class="text-3xl">🧑‍⚖️</span>
+                    </div>
+                     <div class="step-content">
+                        <p class="mt-4 text-slate-600">特許庁は提出された書類について、まず形式的な不備がないかを確認する方式審査を行います。その後、商標法に定められた登録要件（識別力があるか、他人の商標と混同しないかなど）を満たしているかを専門の審査官が詳しく調べる実体審査を行います。</p>
+                        <div class="mt-4 bg-slate-100 rounded-lg p-4">
+                            <p><strong class="font-semibold text-slate-700">目的:</strong> 商標が登録要件を満たすか確認する</p>
+                            <p><strong class="font-semibold text-slate-700">行動:</strong> 特許庁による方式審査と実体審査</p>
+                            <p><strong class="font-semibold text-slate-700">結果:</strong> 商標の登録可否が判断される</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 4 -->
+            <div class="step-card-container relative pl-12 pb-8">
+                <div class="timeline-dot bg-white border-4 border-slate-300 rounded-full"></div>
+                <div id="step-4" class="step-card border-2 border-transparent rounded-lg p-6 bg-white shadow-md cursor-pointer transition-all duration-300 hover:shadow-lg">
+                    <div class="flex items-center justify-between">
+                        <h2 class="text-xl font-bold text-slate-900">4. 拒絶理由通知への対応</h2>
+                        <span class="text-3xl">❗️</span>
+                    </div>
+                     <div class="step-content">
+                        <p class="mt-4 text-slate-600">実体審査の結果、商標登録が難しいと判断された場合、特許庁から拒絶理由通知が届きます。これに対しては、意見書を提出して反論したり、出願内容を修正したりして、登録を目指すことができます。この段階で、専門家である弁理士のサポートを受けることが非常に有効です。</p>
+                         <div class="mt-4 bg-yellow-100 border-l-4 border-yellow-400 text-yellow-800 p-4 rounded-r-lg">
+                            <p><strong class="font-semibold">状況:</strong> 登録が難しいと判断された場合</p>
+                            <p><strong class="font-semibold">行動:</strong> 意見書提出や出願内容の修正</p>
+                            <p><strong class="font-semibold">ヒント:</strong> 弁理士など専門家のサポートが有効</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 5 -->
+            <div class="step-card-container relative pl-12 pb-8">
+                 <div class="timeline-dot bg-white border-4 border-slate-300 rounded-full"></div>
+                <div id="step-5" class="step-card border-2 border-transparent rounded-lg p-6 bg-white shadow-md cursor-pointer transition-all duration-300 hover:shadow-lg">
+                    <div class="flex items-center justify-between">
+                        <h2 class="text-xl font-bold text-slate-900">5. 登録査定・設定登録</h2>
+                        <span class="text-3xl">✨</span>
+                    </div>
+                     <div class="step-content">
+                        <p class="mt-4 text-slate-600">審査をクリアし、商標法上の問題がなければ、特許庁から登録査定が送られてきます。これを受けたら、登録料を支払います。登録料の納付が完了すると、あなたの商標が正式に商標登録原簿に登録され、商標権が発生します。これにより、あなたはその商標を独占的に使用する権利を持つことになります。</p>
+                        <div class="mt-4 bg-green-100 border-l-4 border-green-400 text-green-800 p-4 rounded-r-lg">
+                            <p><strong class="font-semibold">目的:</strong> 商標権を取得する</p>
+                            <p><strong class="font-semibold">行動:</strong> 登録料の支払い</p>
+                            <p><strong class="font-semibold">結果:</strong> 商標権が発生し、独占的使用が可能に</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Step 6 -->
+            <div class="step-card-container relative pl-12">
+                 <div class="timeline-dot bg-white border-4 border-slate-300 rounded-full"></div>
+                <div id="step-6" class="step-card border-2 border-transparent rounded-lg p-6 bg-white shadow-md cursor-pointer transition-all duration-300 hover:shadow-lg">
+                    <div class="flex items-center justify-between">
+                        <h2 class="text-xl font-bold text-slate-900">6. 商標公報の発行</h2>
+                        <span class="text-3xl">📰</span>
+                    </div>
+                     <div class="step-content">
+                        <p class="mt-4 text-slate-600">商標登録されると、その内容が商標公報に掲載され、一般に公開されます。これにより、第三者もあなたの商標登録を知ることができます。</p>
+                        <div class="mt-4 bg-slate-100 rounded-lg p-4">
+                            <p><strong class="font-semibold text-slate-700">目的:</strong> 商標登録情報を公開する</p>
+                            <p><strong class="font-semibold text-slate-700">行動:</strong> 商標公報への掲載</p>
+                            <p><strong class="font-semibold text-slate-700">結果:</strong> 第三者への公示</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const ideaData = [
-                {
-                    category: 'データ分析',
-                    icon: '📊',
-                    description: '数値から新たな価値を発見',
-                    examples: [
-                        '営業データや顧客情報をAIで分析し、新たな販売傾向や優良顧客のパターンを発見する。',
-                        'ウェブサイトのアクセスログを分析し、ユーザー行動に基づいた改善点を見つけ出す。',
-                        '市場調査のアンケート結果をAIで要約・分類し、レポート作成時間を短縮する。'
-                    ]
-                },
-                {
-                    category: '資料作成サポート',
-                    icon: '📝',
-                    description: '面倒な書類作成を効率化',
-                    examples: [
-                        '長時間の会議の議事録を、AIを使って数分で要約し、決定事項をリストアップする。',
-                        'プレゼンテーションのテーマを伝えるだけで、構成案やスライドのたたき台を自動生成する。',
-                        '定型的なメール（お礼、催促など）のドラフトを、相手や状況に応じてAIに作成させる。'
-                    ]
-                },
-                {
-                    category: '顧客対応の改善',
-                    icon: '💬',
-                    description: '顧客満足度を向上',
-                    examples: [
-                        'ウェブサイトによくある質問（FAQ）への自動応答チャットボットを設置し、24時間対応を実現する。',
-                        'お客様からの問い合わせメールの内容をAIが自動で分類し、適切な担当者に振り分ける。',
-                        '顧客からのフィードバック（アンケートやレビュー）の感情を分析し、サービスの改善点を探る。'
-                    ]
-                },
-                {
-                    category: 'アイデア創出支援',
-                    icon: '💡',
-                    description: '新しい発想を生み出す',
-                    examples: [
-                        '新規事業や新サービスのアイデアを、AIを壁打ち相手にしてブレインストーミングする。',
-                        '競合他社の製品やサービスの特徴をAIに分析させ、自社の強みや差別化ポイントを考える。',
-                        '新しい商品のキャッチコピーやキャンペーン企画の案を、AIに複数パターン提案させる。'
-                    ]
-                },
-                {
-                    category: '定型業務の自動化',
-                    icon: '🤖',
-                    description: '日々のルーチンワークを削減',
-                    examples: [
-                        '請求書や領収書の画像からAIが情報を読み取り、会計システムへ自動で入力する。',
-                        '毎週作成している定例レポートのデータ収集からグラフ作成までを、AIで自動化する。',
-                        '社内規定やマニュアルに関する質問に、AIが即座に回答するシステムを構築する。'
-                    ]
-                }
-            ];
+        document.addEventListener('DOMContentLoaded', () => {
+            const steps = document.querySelectorAll('.step-card');
 
-            const categoriesContainer = document.getElementById('idea-categories');
-            const contentContainer = document.getElementById('idea-content');
-            let activeCard = null;
-
-            ideaData.forEach(item => {
-                const card = document.createElement('div');
-                card.className = 'category-card bg-white p-4 rounded-lg shadow-md border-2 border-transparent cursor-pointer transition-all duration-300 hover:shadow-xl hover:border-indigo-500 flex flex-col items-center text-center';
-                card.innerHTML = `
-                    <span class="text-4xl mb-2">${item.icon}</span>
-                    <h3 class="font-bold text-sm md:text-base">${item.category}</h3>
-                    <p class="text-xs text-gray-500 hidden md:block">${item.description}</p>
-                `;
-
-                card.addEventListener('click', () => {
-                    if (activeCard) {
-                        activeCard.classList.remove('card-active');
+            steps.forEach(step => {
+                step.addEventListener('click', () => {
+                    const currentlyActive = document.querySelector('.step-card.active');
+                    if (currentlyActive && currentlyActive !== step) {
+                        currentlyActive.classList.remove('active');
+                        currentlyActive.querySelector('.timeline-dot').classList.remove('bg-blue-500','border-blue-500');
+                        currentlyActive.querySelector('.timeline-dot').classList.add('bg-white','border-slate-300');
                     }
-                    card.classList.add('card-active');
-                    activeCard = card;
-
-                    contentContainer.classList.add('fade-out');
                     
-                    setTimeout(() => {
-                        contentContainer.innerHTML = '';
-                        const exampleList = document.createElement('ul');
-                        exampleList.className = 'space-y-3 list-disc list-inside text-left';
-                        item.examples.forEach(exampleText => {
-                            const listItem = document.createElement('li');
-                            listItem.className = "text-gray-700";
-                            listItem.textContent = exampleText;
-                            exampleList.appendChild(listItem);
-                        });
-                        contentContainer.appendChild(exampleList);
-                        contentContainer.classList.remove('fade-out');
-                    }, 250);
+                    step.classList.toggle('active');
+                    const dot = step.closest('.step-card-container').querySelector('.timeline-dot');
+                    if (step.classList.contains('active')) {
+                        dot.classList.remove('bg-white','border-slate-300');
+                        dot.classList.add('bg-blue-500','border-blue-500');
+                    } else {
+                        dot.classList.remove('bg-blue-500','border-blue-500');
+                        dot.classList.add('bg-white','border-slate-300');
+                    }
                 });
-                categoriesContainer.appendChild(card);
             });
         });
     </script>
-
 </body>
 </html>

@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>インタラクティブ AI活用提案コンテスト案内</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chosen Palette: Calm Harmony -->
+    <!-- Application Structure Plan: The SPA is structured as a narrative journey. It begins with the President's compelling vision ("The Why"), transitions into an interactive "Idea Explorer" where users can actively discover concrete AI use-cases relevant to their roles ("The How"), and concludes with a strong call to action for the contest ("The What"). This structure is designed to first build motivation and understanding, then provide practical inspiration, making employees more likely to engage with the contest. It directly addresses the source report's goal of overcoming employee hesitation. -->
+    <!-- Visualization & Content Choices: Report Info: The core is a motivational announcement and examples of AI use. Goal: Inform, Engage, Inspire. Viz/Presentation Method: The central interactive element is a set of clickable cards for different business areas (e.g., 'Data Analysis', 'Document Support'), built with HTML/Tailwind. Interaction: Clicking a card reveals specific, relatable AI application examples via vanilla JS, dynamically updating a content area. Justification: This interactive exploration is far more engaging than a static list. It allows employees to see AI's potential in their own context, sparking personalized ideas. It's a low-pressure way to learn, perfectly suited for an audience with varying AI literacy. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap');
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+            background-color: #f8f9fa;
+        }
+        .card-active {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            border-color: #4f46e5;
+        }
+        .idea-content {
+            transition: opacity 0.5s ease-in-out;
+        }
+        .fade-in {
+            opacity: 1 !important;
+        }
+        .fade-out {
+            opacity: 0;
+        }
+    </style>
+</head>
+<body class="text-gray-800">
+
+    <div class="container mx-auto p-4 md:p-8 max-w-5xl">
+
+        <!-- Header -->
+        <header class="text-center mb-12">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-2">未来を創る、AI活用提案コンテスト</h1>
+            <p class="text-gray-600">AIは、あなたの仕事をどう変えるだろう？</p>
+        </header>
+
+        <!-- President's Message -->
+        <section class="mb-16">
+            <div class="bg-white p-8 rounded-xl shadow-md border border-gray-200">
+                <h2 class="text-2xl font-bold text-center text-indigo-700 mb-6">社長からのメッセージ</h2>
+                <div class="space-y-4 text-gray-700 leading-relaxed">
+                    <p>社員の皆さん、この度「AI活用提案コンテスト」を開催します。近年のAI技術の進化は、私たちの働き方を根本から変える力を持っています。しかし、AIを「難しそう」「よく分からない」と感じている人が多いのも事実です。私はこの状況に強い危機感を抱いています。</p>
+                    <p class="font-bold text-indigo-800 bg-indigo-50 p-4 rounded-lg">AIの進化を考えると、今後、AIを使いこなせない会社は競争力を失います。会社として成長し続けるためには、私たち一人ひとりが「AIに使われる側」ではなく、AIを自らの武器として「使いこなす側」になる必要があります。</p>
+                    <p>このコンテストは、皆さんが「AIで何ができるか」を考え、日々の業務で感じる「もっとこうだったら」という思いを形にする絶好の機会です。知識や経験は問いません。皆さんの純粋なアイデアが、当社の未来を創る原動力となります。</p>
+                </div>
+                <p class="text-right mt-6 font-bold text-gray-900">[代表取締役社長の氏名]</p>
+            </div>
+        </section>
+
+        <!-- Interactive Idea Explorer -->
+        <section class="mb-12">
+            <div class="text-center mb-8">
+                <h2 class="text-2xl font-bold text-gray-900">AI活用のヒントを探そう</h2>
+                <p class="text-gray-600 mt-2">あなたの業務に近いカテゴリーをクリックして、AIで何ができるか見てみましょう。</p>
+            </div>
+
+            <!-- Category Cards -->
+            <div id="idea-categories" class="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8">
+                
+            </div>
+
+            <!-- Idea Display Area -->
+            <div class="bg-white p-6 md:p-8 rounded-xl shadow-inner border border-gray-200 min-h-[200px] flex items-center justify-center">
+                <div id="idea-content" class="idea-content w-full">
+                     <p class="text-center text-gray-500">上のカテゴリーを選択してください。</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Call to Action -->
+        <section class="text-center bg-indigo-700 text-white p-8 rounded-xl shadow-lg">
+            <h2 class="text-3xl font-bold mb-4">さあ、あなたのアイデアを形にしよう！</h2>
+            <p class="mb-6 max-w-2xl mx-auto">どんな小さなアイデアでも構いません。あなたの「こうなったら良いな」が会社の未来を変えるかもしれません。詳細は応募ガイドをご確認ください。</p>
+            <a href="#" class="inline-block bg-white text-indigo-700 font-bold py-3 px-8 rounded-full text-lg hover:bg-indigo-50 transition-colors duration-300 shadow-md">
+                応募ガイドを見る（※リンク先）
+            </a>
+        </section>
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const ideaData = [
+                {
+                    category: 'データ分析',
+                    icon: '📊',
+                    description: '数値から新たな価値を発見',
+                    examples: [
+                        '営業データや顧客情報をAIで分析し、新たな販売傾向や優良顧客のパターンを発見する。',
+                        'ウェブサイトのアクセスログを分析し、ユーザー行動に基づいた改善点を見つけ出す。',
+                        '市場調査のアンケート結果をAIで要約・分類し、レポート作成時間を短縮する。'
+                    ]
+                },
+                {
+                    category: '資料作成サポート',
+                    icon: '📝',
+                    description: '面倒な書類作成を効率化',
+                    examples: [
+                        '長時間の会議の議事録を、AIを使って数分で要約し、決定事項をリストアップする。',
+                        'プレゼンテーションのテーマを伝えるだけで、構成案やスライドのたたき台を自動生成する。',
+                        '定型的なメール（お礼、催促など）のドラフトを、相手や状況に応じてAIに作成させる。'
+                    ]
+                },
+                {
+                    category: '顧客対応の改善',
+                    icon: '💬',
+                    description: '顧客満足度を向上',
+                    examples: [
+                        'ウェブサイトによくある質問（FAQ）への自動応答チャットボットを設置し、24時間対応を実現する。',
+                        'お客様からの問い合わせメールの内容をAIが自動で分類し、適切な担当者に振り分ける。',
+                        '顧客からのフィードバック（アンケートやレビュー）の感情を分析し、サービスの改善点を探る。'
+                    ]
+                },
+                {
+                    category: 'アイデア創出支援',
+                    icon: '💡',
+                    description: '新しい発想を生み出す',
+                    examples: [
+                        '新規事業や新サービスのアイデアを、AIを壁打ち相手にしてブレインストーミングする。',
+                        '競合他社の製品やサービスの特徴をAIに分析させ、自社の強みや差別化ポイントを考える。',
+                        '新しい商品のキャッチコピーやキャンペーン企画の案を、AIに複数パターン提案させる。'
+                    ]
+                },
+                {
+                    category: '定型業務の自動化',
+                    icon: '🤖',
+                    description: '日々のルーチンワークを削減',
+                    examples: [
+                        '請求書や領収書の画像からAIが情報を読み取り、会計システムへ自動で入力する。',
+                        '毎週作成している定例レポートのデータ収集からグラフ作成までを、AIで自動化する。',
+                        '社内規定やマニュアルに関する質問に、AIが即座に回答するシステムを構築する。'
+                    ]
+                }
+            ];
+
+            const categoriesContainer = document.getElementById('idea-categories');
+            const contentContainer = document.getElementById('idea-content');
+            let activeCard = null;
+
+            ideaData.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'category-card bg-white p-4 rounded-lg shadow-md border-2 border-transparent cursor-pointer transition-all duration-300 hover:shadow-xl hover:border-indigo-500 flex flex-col items-center text-center';
+                card.innerHTML = `
+                    <span class="text-4xl mb-2">${item.icon}</span>
+                    <h3 class="font-bold text-sm md:text-base">${item.category}</h3>
+                    <p class="text-xs text-gray-500 hidden md:block">${item.description}</p>
+                `;
+
+                card.addEventListener('click', () => {
+                    if (activeCard) {
+                        activeCard.classList.remove('card-active');
+                    }
+                    card.classList.add('card-active');
+                    activeCard = card;
+
+                    contentContainer.classList.add('fade-out');
+                    
+                    setTimeout(() => {
+                        contentContainer.innerHTML = '';
+                        const exampleList = document.createElement('ul');
+                        exampleList.className = 'space-y-3 list-disc list-inside text-left';
+                        item.examples.forEach(exampleText => {
+                            const listItem = document.createElement('li');
+                            listItem.className = "text-gray-700";
+                            listItem.textContent = exampleText;
+                            exampleList.appendChild(listItem);
+                        });
+                        contentContainer.appendChild(exampleList);
+                        contentContainer.classList.remove('fade-out');
+                    }, 250);
+                });
+                categoriesContainer.appendChild(card);
+            });
+        });
+    </script>
+
+</body>
+</html>
